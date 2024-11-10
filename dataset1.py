@@ -1,4 +1,6 @@
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 import kaggle
 import numpy as np
 import tensorflow as tf
@@ -13,13 +15,13 @@ import re
 
 
 # Paths for images and captions
-IMAGES_PATH = "./datasets/flickr8k_images"  # Specify a local path
-CAPTIONS_PATH = "./datasets/captions.txt"  # Your caption file should be here
+IMAGES_PATH = "datasets/flickr8k_images/Images"  # Specify a local path
+CAPTIONS_PATH = "datasets/flickr8k_images/captions.txt"  # Your caption file should be here
 
 PREPROCESSED_IMAGES_PATH = "/kaggle/working/preprocessed_images"
 
 # Dataset identifier from Kaggle (for flickr8k dataset)
-dataset_identifier = 'flickr8k/flickr8k-dataset'
+dataset_identifier = 'adityajn105/flickr8k'
 
 # Download the dataset
 kaggle.api.dataset_download_files(dataset_identifier, path=IMAGES_PATH, unzip=True)
@@ -124,12 +126,12 @@ print(f"Validation samples: {len(validation_data)}")
 print(f"Test samples: {len(test_data)}")
 
 # Load the InceptionV3 model for feature extraction
-weights_path = "/kaggle/input/inceptionv3/inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5"
 base_model = tf.keras.applications.InceptionV3(
     include_top=False,
-    weights=weights_path,
+    weights='imagenet',  # Use 'imagenet' instead of a file path
     input_shape=IMAGE_SIZE + (3,)
 )
+
 feature_extractor = tf.keras.Model(inputs=base_model.input, outputs=base_model.layers[-1].output)
 
 # Extract and save preprocessed image features

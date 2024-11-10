@@ -9,5 +9,6 @@ kaggle
 *.npy
 
 # Ignore virtual environments
-myenv/
-.env/
+myenv
+env
+venv
